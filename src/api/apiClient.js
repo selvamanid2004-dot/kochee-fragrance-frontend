@@ -1,0 +1,105 @@
+import { API_BASE_URL } from './endpoints';
+
+class ApiClient {
+  constructor(baseURL) {
+    this.baseURL = baseURL;
+  }
+
+  getHeaders() {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    const token = localStorage.getItem('kochee_admin_token') || localStorage.getItem('kochee_auth_token');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
+  }
+
+  async request(endpoint, options = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+    const headers = {
+      ...this.getHeaders(),
+      ...options.headers
+    };
+
+    const config = {
+      ...options,
+      headers
+    };
+
+    try {
+      const response = await fetch(url, config);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `Request failed with status ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      console.error(`[API Error] ${options.method || 'GET'} ${url}:`, error.message);
+      throw error;
+    }
+  }
+
+  get(endpoint, options = {}) {
+    return this.request(endpoint, { ...options, method: 'GET' });
+  }
+
+  post(endpoint, body, options = {}) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+  }
+
+  put(endpoint, body, options = {}) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: JSON.stringify(body)
+    });
+  }
+
+  patch(endpoint, body, options = {}) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: JSON.stringify(body)
+    });
+  }
+
+  delete(endpoint, options = {}) {
+    return this.request(endpoint, { ...options, method: 'DELETE' });
+  }
+
+  async upload(endpoint, formData, options = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+    const token = localStorage.getItem('kochee_admin_token') || localStorage.getItem('kochee_auth_token');
+    const headers = { ...options.headers };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || `Upload failed with status ${response.status}`);
+      }
+      return data;
+    } catch (error) {
+      console.error(`[API Upload Error] ${url}:`, error.message);
+      throw error;
+    }
+  }
+}
+
+export const apiClient = new ApiClient(API_BASE_URL);
+

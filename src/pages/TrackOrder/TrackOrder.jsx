@@ -36,10 +36,10 @@ export default function TrackOrder({ initialOrderNumber = '', onNavigate }) {
     <div className="max-w-4xl mx-auto px-4 py-10 space-y-8 bg-white text-black">
       {onNavigate && (
         <button
-          onClick={() => onNavigate('home')}
+          onClick={() => onNavigate('back')}
           className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-gray-500 hover:text-black transition"
         >
-          <ArrowLeft className="w-4 h-4" /> Return to Home
+          <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
 

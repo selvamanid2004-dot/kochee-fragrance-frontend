@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, ShieldCheck, Truck, RotateCcw, Award, Check, ArrowLeft, Clock, Wind, Sparkles } from 'lucide-react';
+import { Star, ShieldCheck, Truck, RotateCcw, Award, Check, ArrowLeft, Clock, Wind, Sparkles, ShoppingBag } from 'lucide-react';
 import { productService } from '../../services/productService';
 import { useCart } from '../../context/CartContext';
 import { sanitizeMediaUrl } from '../../api/endpoints';
@@ -75,12 +75,12 @@ export default function ProductDetail({ slug, onNavigate }) {
     : null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 bg-white text-black">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-24 sm:pb-10 space-y-6 sm:space-y-10 bg-white text-black">
       <button
-        onClick={() => onNavigate('catalog')}
+        onClick={() => onNavigate('back')}
         className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-neutral-500 hover:text-black transition"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to All Fragrances
+        <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
@@ -108,7 +108,7 @@ export default function ProductDetail({ slug, onNavigate }) {
                 <button
                   key={idx}
                   onClick={() => setActiveImage(idx)}
-                  className={`w-18 h-22 sm:w-20 sm:h-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 ${
+                  className={`w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 ${
                     activeImage === idx
                       ? 'border-black shadow-md scale-105'
                       : 'border-neutral-200 opacity-60 hover:opacity-100'
@@ -153,12 +153,14 @@ export default function ProductDetail({ slug, onNavigate }) {
           </div>
 
           {/* Pricing Card */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-neutral-50 border border-neutral-200 flex items-baseline gap-4 shadow-sm">
-            <span className="text-3xl font-black text-black">₹{product.price}</span>
-            {product.compare_price && (
-              <span className="text-base text-neutral-400 line-through font-medium">₹{product.compare_price}</span>
-            )}
-            <span className="text-xs text-emerald-800 font-black ml-auto bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+          <div className="p-4 sm:p-5 rounded-2xl bg-neutral-50 border border-neutral-200 flex flex-wrap items-baseline justify-between gap-2 sm:gap-4 shadow-sm">
+            <div className="flex items-baseline gap-3">
+              <span className="text-2xl sm:text-3xl font-black text-black">₹{product.price}</span>
+              {product.compare_price && (
+                <span className="text-sm sm:text-base text-neutral-400 line-through font-medium">₹{product.compare_price}</span>
+              )}
+            </div>
+            <span className="text-[11px] sm:text-xs text-emerald-800 font-black bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
               In Stock • Taxes Included
             </span>
           </div>
@@ -253,6 +255,28 @@ export default function ProductDetail({ slug, onNavigate }) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Mobile Sticky Add to Cart Bottom Bar */}
+      <div className="fixed sm:hidden bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-neutral-200 px-4 py-3 flex items-center justify-between gap-3 shadow-2xl">
+        <div>
+          <span className="text-[10px] text-neutral-500 uppercase font-bold block">{product.volume || '50ml Flacon'}</span>
+          <span className="text-lg font-black text-black">₹{product.price}</span>
+        </div>
+        <button
+          onClick={handleAddToCart}
+          disabled={product.stock <= 0}
+          className={`flex-1 max-w-[200px] py-2.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 shadow-md ${
+            product.stock > 0
+              ? addedAnimation
+                ? 'bg-emerald-700 text-white'
+                : 'bg-black text-white active:scale-95'
+              : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
+          }`}
+        >
+          <ShoppingBag className="w-3.5 h-3.5" />
+          <span>{product.stock > 0 ? (addedAnimation ? 'Added!' : 'Add to Bag') : 'Out of Stock'}</span>
+        </button>
       </div>
     </div>
   );

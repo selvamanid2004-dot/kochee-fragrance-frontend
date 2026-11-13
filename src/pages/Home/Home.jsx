@@ -167,45 +167,45 @@ export default function Home({ onNavigate }) {
       {/* =========================================================================
           2. TRUST BADGES BAR — LUXURY MONOCHROME BLACK & WHITE
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 p-5 sm:p-6 bg-neutral-50 border border-neutral-200 rounded-2xl shadow-sm">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-              <Award className="w-6 h-6 text-white" />
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6 p-3.5 sm:p-6 bg-neutral-50 border border-neutral-200 rounded-xl sm:rounded-2xl shadow-xs">
+          <div className="flex items-center gap-2 sm:gap-3.5">
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+              <Award className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h4 className="text-xs font-black uppercase tracking-wider text-black">100% Original</h4>
-              <p className="text-[11px] text-neutral-500 font-medium mt-0.5">Direct French Oil Extrait</p>
+              <h4 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-black">100% Original</h4>
+              <p className="text-[9px] sm:text-[11px] text-neutral-500 font-medium mt-0.5 line-clamp-1 sm:line-clamp-none">Direct French Oil Extrait</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-              <Truck className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-2 sm:gap-3.5">
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+              <Truck className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h4 className="text-xs font-black uppercase tracking-wider text-black">Express Dispatch</h4>
-              <p className="text-[11px] text-neutral-500 font-medium mt-0.5">Free over ₹999 across India</p>
+              <h4 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-black">Express Dispatch</h4>
+              <p className="text-[9px] sm:text-[11px] text-neutral-500 font-medium mt-0.5 line-clamp-1 sm:line-clamp-none">Free over ₹999 in India</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-              <RotateCcw className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-2 sm:gap-3.5">
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+              <RotateCcw className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h4 className="text-xs font-black uppercase tracking-wider text-black">Complimentary 2ml</h4>
-              <p className="text-[11px] text-neutral-500 font-medium mt-0.5">Test with zero opening risk</p>
+              <h4 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-black">Free 2ml Tester</h4>
+              <p className="text-[9px] sm:text-[11px] text-neutral-500 font-medium mt-0.5 line-clamp-1 sm:line-clamp-none">Risk-free skin test</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-              <ShieldCheck className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-2 sm:gap-3.5">
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-black text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+              <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h4 className="text-xs font-black uppercase tracking-wider text-black">Cash On Delivery</h4>
-              <p className="text-[11px] text-neutral-500 font-medium mt-0.5">Doorstep safe payment</p>
+              <h4 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-black">Cash On Delivery</h4>
+              <p className="text-[9px] sm:text-[11px] text-neutral-500 font-medium mt-0.5 line-clamp-1 sm:line-clamp-none">Safe doorstep payment</p>
             </div>
           </div>
         </div>
@@ -225,12 +225,12 @@ export default function Home({ onNavigate }) {
           <div className="w-16 h-1 bg-black mx-auto mt-2.5 rounded-full" />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-6">
           {categories.map((cat) => (
             <div
               key={cat.id}
               onClick={() => onNavigate('catalog', { category: cat.slug })}
-              className="group cursor-pointer bg-white rounded-2xl border border-neutral-200 overflow-hidden hover:border-black hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1.5 transition-all duration-300"
+              className="group cursor-pointer bg-white rounded-xl sm:rounded-2xl border border-neutral-200 overflow-hidden hover:border-black hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1 transition-all duration-300"
             >
               <div className="aspect-[4/3] bg-neutral-100 overflow-hidden relative">
                 <img
@@ -240,12 +240,12 @@ export default function Home({ onNavigate }) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <div className="p-4 text-center bg-white border-t border-neutral-100">
-                <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-black group-hover:underline transition">
+              <div className="p-2.5 sm:p-4 text-center bg-white border-t border-neutral-100">
+                <h3 className="text-[11px] sm:text-sm font-black uppercase tracking-wider text-black group-hover:underline transition line-clamp-1">
                   {cat.name}
                 </h3>
-                <span className="text-[11px] text-neutral-500 font-semibold mt-0.5 inline-block group-hover:text-black">
-                  Explore Collection →
+                <span className="text-[9px] sm:text-[11px] text-neutral-500 font-semibold mt-0.5 inline-block group-hover:text-black">
+                  Explore →
                 </span>
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function Home({ onNavigate }) {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-6">
             {bestsellers.map(product => (
               <ProductCard
                 key={product.id}

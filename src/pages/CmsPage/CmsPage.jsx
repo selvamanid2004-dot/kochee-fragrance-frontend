@@ -47,10 +47,10 @@ export default function CmsPage({ slug, onNavigate }) {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8 bg-white text-black">
       <button
-        onClick={() => onNavigate('home')}
+        onClick={() => onNavigate('back')}
         className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-gray-500 hover:text-black transition"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Store
+        <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
       <div className="border-b border-gray-200 pb-6">

@@ -83,14 +83,14 @@ export default function Catalog({ onNavigate, initialParams = {} }) {
           )}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
           {categories.map(cat => {
             const isSelected = selectedCategory === cat.slug;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(isSelected ? '' : cat.slug)}
-                className={`p-3.5 sm:p-4 rounded-xl border text-left transition-all duration-300 flex items-center justify-between ${
+                className={`p-2.5 sm:p-4 rounded-xl border text-left transition-all duration-300 flex items-center justify-between ${
                   isSelected
                     ? 'border-black bg-black text-white shadow-lg scale-[1.02]'
                     : 'border-neutral-200 bg-neutral-50 hover:border-black text-black'
@@ -225,7 +225,7 @@ export default function Catalog({ onNavigate, initialParams = {} }) {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-6">
           {sortedProducts.map(product => (
             <ProductCard
               key={product.id}

@@ -5,9 +5,26 @@
 @tailwind utilities;
 
 @layer base {
-  body {
+  html, body {
     @apply bg-white text-black font-sans antialiased selection:bg-black selection:text-white;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
   }
+}
+
+/* Hide scrollbars for clean touch swipe areas while preserving native scroll */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Elegant Fade In Keyframe */

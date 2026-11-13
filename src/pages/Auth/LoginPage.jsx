@@ -40,10 +40,10 @@ export default function LoginPage({ onNavigate }) {
     <div className="min-h-[75vh] flex items-center justify-center px-4 py-12 bg-gray-50 text-black">
       <div className="max-w-md w-full bg-white border border-gray-200 rounded-2xl p-8 space-y-6 shadow-xl">
         <button
-          onClick={() => onNavigate('home')}
+          onClick={() => onNavigate('back')}
           className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-gray-500 hover:text-black transition"
         >
-          <ArrowLeft className="w-4 h-4" /> Return to Boutique
+          <ArrowLeft className="w-4 h-4" /> Back to Boutique
         </button>
 
         <div className="text-center space-y-1">

@@ -106,9 +106,9 @@ export default function Footer({ onNavigate }) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4 text-center sm:text-left">
         <div>© {new Date().getFullYear()} KOCHEE FRAGRANCE. ALL RIGHTS RESERVED.</div>
-        <div className="flex flex-wrap items-center gap-4 text-neutral-400">
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-4 text-neutral-400">
           <button onClick={() => onNavigate('home')} className="hover:text-white transition">Home</button>
           <button onClick={() => onNavigate('catalog')} className="hover:text-white transition">All Perfumes</button>
           <button onClick={() => onNavigate('about')} className="hover:text-white transition">About</button>

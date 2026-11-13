@@ -49,12 +49,12 @@ export default function Navbar({ onNavigate, currentPage }) {
       </div>
 
       {/* 2. Middle Main Bar: Brand, Search, Customer Login/Account, Bag */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex items-center justify-between gap-3 sm:gap-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 flex items-center justify-between gap-2 sm:gap-6">
         {/* Mobile Hamburger */}
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-1.5 lg:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-black hover:text-neutral-700 transition rounded-lg hover:bg-neutral-100"
+            className="p-1.5 sm:p-2 text-black hover:text-neutral-700 transition rounded-lg hover:bg-neutral-100"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
@@ -67,15 +67,15 @@ export default function Navbar({ onNavigate, currentPage }) {
           onClick={() => onNavigate('home')}
         >
           {settings.logo_image ? (
-            <img src={settings.logo_image} alt={settings.logo_text || 'KOCHEE'} className="h-7 sm:h-8 object-contain" />
+            <img src={settings.logo_image} alt={settings.logo_text || 'KOCHEE'} className="h-6 sm:h-8 object-contain" />
           ) : (
             <>
-              <div className="flex items-center gap-1.5">
-                <span className="font-serif tracking-[0.2em] text-xl sm:text-2xl md:text-3xl font-extrabold text-black uppercase block leading-none group-hover:text-neutral-700 transition-colors">
+              <div className="flex items-center justify-center lg:justify-start gap-1">
+                <span className="font-serif tracking-[0.16em] sm:tracking-[0.2em] text-lg sm:text-2xl md:text-3xl font-extrabold text-black uppercase block leading-none group-hover:text-neutral-700 transition-colors">
                   {settings.logo_text || 'KOCHEE'}<span className="text-black">.</span>
                 </span>
               </div>
-              <span className="text-[8px] sm:text-[9px] tracking-[0.38em] text-neutral-500 font-sans uppercase block mt-1 font-bold">
+              <span className="text-[7px] sm:text-[9px] tracking-[0.32em] sm:tracking-[0.38em] text-neutral-500 font-sans uppercase block mt-0.5 sm:mt-1 font-bold">
                 {settings.logo_subtitle || 'HAUTE PARFUMERIE'}
               </span>
             </>
@@ -104,19 +104,19 @@ export default function Navbar({ onNavigate, currentPage }) {
         </form>
 
         {/* Right Actions: Customer Account / Login & Shopping Bag */}
-        <div className="flex items-center space-x-3 sm:space-x-4">
+        <div className="flex items-center space-x-1.5 sm:space-x-4">
           {/* Customer Account / Sign In */}
           {isAuthenticated ? (
             <div className="relative">
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2 text-xs font-bold text-black border border-neutral-300 bg-neutral-50 hover:bg-neutral-100 px-3 py-1.5 rounded-xl hover:border-black transition"
+                className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold text-black border border-neutral-300 bg-neutral-50 hover:bg-neutral-100 p-1.5 sm:px-3 sm:py-1.5 rounded-xl hover:border-black transition"
               >
                 <div className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[10px] font-black">
                   {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <span className="hidden sm:inline">{currentUser.name}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-neutral-600" />
+                <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-neutral-600" />
               </button>
 
               {userDropdownOpen && (
@@ -159,22 +159,23 @@ export default function Navbar({ onNavigate, currentPage }) {
           ) : (
             <button
               onClick={() => onNavigate('login')}
-              className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black bg-neutral-100 border border-neutral-300 px-3.5 py-1.5 rounded-xl hover:bg-black hover:text-white hover:border-black transition active:scale-95 shadow-xs"
+              className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-black bg-neutral-100 border border-neutral-300 p-2 sm:px-3.5 sm:py-1.5 rounded-xl hover:bg-black hover:text-white hover:border-black transition active:scale-95 shadow-xs"
+              aria-label="Customer Login"
             >
               <User className="w-4 h-4" />
-              <span className="hidden sm:inline">Log In / Sign Up</span>
+              <span className="hidden sm:inline">Log In</span>
             </button>
           )}
 
           {/* Cart Bag */}
           <button
             onClick={() => setIsCartDrawerOpen(true)}
-            className="relative flex items-center gap-1.5 text-black hover:text-neutral-700 transition p-1.5 rounded-xl hover:bg-neutral-100 active:scale-95"
+            className="relative flex items-center gap-1 text-black hover:text-neutral-700 transition p-1.5 sm:p-2 rounded-xl hover:bg-neutral-100 active:scale-95"
             aria-label="Shopping Cart"
           >
-            <ShoppingBag className="w-6 h-6" />
+            <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
             {totalItemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">
+              <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] sm:text-[10px] font-black w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">
                 {totalItemCount}
               </span>
             )}
@@ -183,12 +184,12 @@ export default function Navbar({ onNavigate, currentPage }) {
         </div>
       </div>
 
-      {/* 3. Header Menu: HOME, ABOUT, CONTACT, ALL PERFUMES */}
-      <nav className="border-t border-neutral-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center space-x-8 sm:space-x-12 py-3">
+      {/* 3. Header Menu: HOME, ABOUT, CONTACT, ALL PERFUMES (Fluid horizontal touch strip on mobile, centered on desktop) */}
+      <nav className="border-t border-neutral-200 bg-white overflow-x-auto scrollbar-none">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-start sm:justify-center gap-6 sm:gap-12 py-2.5 sm:py-3 min-w-max sm:min-w-0">
           <button
             onClick={() => onNavigate('home')}
-            className={`text-xs font-extrabold tracking-[0.25em] uppercase transition py-1 relative group ${
+            className={`text-[11px] sm:text-xs font-extrabold tracking-[0.2em] sm:tracking-[0.25em] uppercase transition py-1 relative group whitespace-nowrap ${
               currentPage === 'home' ? 'text-black font-black' : 'text-neutral-600 hover:text-black'
             }`}
           >
@@ -200,7 +201,7 @@ export default function Navbar({ onNavigate, currentPage }) {
 
           <button
             onClick={() => onNavigate('catalog')}
-            className={`text-xs font-extrabold tracking-[0.25em] uppercase transition py-1 relative group ${
+            className={`text-[11px] sm:text-xs font-extrabold tracking-[0.2em] sm:tracking-[0.25em] uppercase transition py-1 relative group whitespace-nowrap ${
               currentPage === 'catalog' ? 'text-black font-black' : 'text-neutral-600 hover:text-black'
             }`}
           >
@@ -212,7 +213,7 @@ export default function Navbar({ onNavigate, currentPage }) {
 
           <button
             onClick={() => onNavigate('about')}
-            className={`text-xs font-extrabold tracking-[0.25em] uppercase transition py-1 relative group ${
+            className={`text-[11px] sm:text-xs font-extrabold tracking-[0.2em] sm:tracking-[0.25em] uppercase transition py-1 relative group whitespace-nowrap ${
               currentPage === 'about' ? 'text-black font-black' : 'text-neutral-600 hover:text-black'
             }`}
           >
@@ -224,7 +225,7 @@ export default function Navbar({ onNavigate, currentPage }) {
 
           <button
             onClick={() => onNavigate('contact')}
-            className={`text-xs font-extrabold tracking-[0.25em] uppercase transition py-1 relative group ${
+            className={`text-[11px] sm:text-xs font-extrabold tracking-[0.2em] sm:tracking-[0.25em] uppercase transition py-1 relative group whitespace-nowrap ${
               currentPage === 'contact' ? 'text-black font-black' : 'text-neutral-600 hover:text-black'
             }`}
           >

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Calendar, MapPin, ArrowRight, User, ShoppingBag, LogOut, CheckCircle2, Clock } from 'lucide-react';
+import { Package, Calendar, MapPin, ArrowRight, ArrowLeft, User, ShoppingBag, LogOut, CheckCircle2, Clock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { orderService } from '../../services/orderService';
 
@@ -34,28 +34,35 @@ export default function AccountDashboard({ onNavigate }) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-white text-black">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8 bg-white text-black">
+      <button
+        onClick={() => onNavigate('back')}
+        className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-gray-500 hover:text-black transition"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back
+      </button>
+
       {/* Account Top Summary */}
-      <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center font-serif text-xl font-black shadow-md">
+      <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-5 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 shadow-sm">
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-black text-white flex items-center justify-center font-serif text-lg sm:text-xl font-black shadow-md flex-shrink-0">
             {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
               CUSTOMER ACCOUNT
             </span>
-            <h1 className="text-2xl font-serif font-black uppercase text-black">
+            <h1 className="text-xl sm:text-2xl font-serif font-black uppercase text-black">
               {currentUser?.name}
             </h1>
             <p className="text-xs text-neutral-600 font-medium">{currentUser?.email}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
           <button
             onClick={() => onNavigate('catalog')}
-            className="bg-black hover:bg-neutral-800 text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-md"
+            className="flex-1 sm:flex-none bg-black hover:bg-neutral-800 text-white px-4 sm:px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow-md text-center"
           >
             Shop Perfumes
           </button>
@@ -64,7 +71,7 @@ export default function AccountDashboard({ onNavigate }) {
               logout();
               onNavigate('home');
             }}
-            className="border border-neutral-300 hover:border-black text-neutral-700 hover:text-black px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition bg-white"
+            className="border border-neutral-300 hover:border-black text-neutral-700 hover:text-black px-3.5 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition bg-white"
           >
             <LogOut className="w-3.5 h-3.5 text-neutral-500" /> Logout
           </button>

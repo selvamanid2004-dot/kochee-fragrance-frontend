@@ -20,47 +20,158 @@ import AdminPage from './pages/Admin/AdminPage';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 
-export default function App() {
-  // Listen to pathname & hash for direct /admin or /#admin route
-  const getInitialPage = () => {
-    const hash = window.location.hash.toLowerCase();
-    const path = window.location.pathname.toLowerCase();
-    if (hash === '#admin' || hash === '#/admin' || path === '/admin' || path.startsWith('/admin')) {
-      return 'admin';
-    }
-    return 'home';
-  };
+// URL Hash Routing & History Parser
+function parseHash(hashString) {
+  let raw = hashString || (typeof window !== 'undefined' ? window.location.hash : '') || '';
+  if (raw.startsWith('#')) raw = raw.slice(1);
+  if (raw.startsWith('/')) raw = raw.slice(1);
 
-  const [currentPage, setCurrentPage] = useState(getInitialPage());
-  const [pageParams, setPageParams] = useState({});
+  const pathname = typeof window !== 'undefined' ? window.location.pathname.toLowerCase() : '';
+  if (pathname === '/admin' || pathname.startsWith('/admin')) {
+    return { page: 'admin', params: {} };
+  }
+
+  if (!raw || raw === '' || raw === '/') return { page: 'home', params: {} };
+
+  const [routePart, queryPart] = raw.split('?');
+  const params = {};
+  if (queryPart) {
+    const sp = new URLSearchParams(queryPart);
+    sp.forEach((val, key) => {
+      params[key] = val;
+    });
+  }
+
+  const parts = routePart.split('/').filter(Boolean);
+  const main = parts[0]?.toLowerCase() || 'home';
+
+  switch (main) {
+    case 'admin':
+      return { page: 'admin', params };
+    case 'catalog':
+      return { page: 'catalog', params };
+    case 'product':
+      return { page: 'product', params: { slug: parts[1] || params.slug || '', ...params } };
+    case 'checkout':
+      return { page: 'checkout', params };
+    case 'success':
+      return { page: 'success', params };
+    case 'track':
+      return { page: 'track', params: { orderNumber: parts[1] || params.orderNumber || '', ...params } };
+    case 'cms':
+      return { page: 'cms', params: { slug: parts[1] || params.slug || '', ...params } };
+    case 'about':
+      return { page: 'about', params };
+    case 'contact':
+      return { page: 'contact', params };
+    case 'login':
+      return { page: 'login', params };
+    case 'account':
+      return { page: 'account', params };
+    default:
+      return { page: 'home', params };
+  }
+}
+
+function buildHash(page, params = {}) {
+  switch (page) {
+    case 'home':
+      return '#/';
+    case 'admin':
+      return '#/admin';
+    case 'about':
+      return '#/about';
+    case 'contact':
+      return '#/contact';
+    case 'login':
+      return '#/login';
+    case 'account':
+      return '#/account';
+    case 'checkout':
+      return '#/checkout';
+    case 'success':
+      return '#/success';
+    case 'track':
+      return params.orderNumber ? `#/track/${params.orderNumber}` : '#/track';
+    case 'cms':
+      return params.slug ? `#/cms/${params.slug}` : '#/cms';
+    case 'product':
+      return params.slug ? `#/product/${params.slug}` : '#/catalog';
+    case 'catalog': {
+      const q = new URLSearchParams();
+      if (params.category) q.set('category', params.category);
+      if (params.gender) q.set('gender', params.gender);
+      if (params.search) q.set('search', params.search);
+      const str = q.toString();
+      return str ? `#/catalog?${str}` : '#/catalog';
+    }
+    default:
+      return '#/';
+  }
+}
+
+export default function App() {
+  const initialRoute = parseHash();
+  const [currentPage, setCurrentPage] = useState(initialRoute.page);
+  const [pageParams, setPageParams] = useState(initialRoute.params);
 
   useEffect(() => {
-    const handleUrlChange = () => {
-      const hash = window.location.hash.toLowerCase();
-      const path = window.location.pathname.toLowerCase();
-      if (hash === '#admin' || hash === '#/admin' || path === '/admin' || path.startsWith('/admin')) {
-        setCurrentPage('admin');
+    const initial = parseHash(window.location.hash);
+
+    // If user arrived on a subpage (e.g. direct link to product/checkout),
+    // anchor Home at the base of browser history so pressing Mobile Back
+    // gracefully returns to Home instead of exiting the website!
+    if (initial.page !== 'home') {
+      window.history.replaceState({ page: 'home', params: {}, rootAnchor: true }, '', '#/');
+      window.history.pushState(
+        { page: initial.page, params: initial.params },
+        '',
+        buildHash(initial.page, initial.params)
+      );
+      setCurrentPage(initial.page);
+      setPageParams(initial.params);
+    } else {
+      window.history.replaceState({ page: 'home', params: {}, rootAnchor: true }, '', '#/');
+    }
+
+    const handlePopState = (event) => {
+      if (event.state && event.state.page) {
+        setCurrentPage(event.state.page);
+        setPageParams(event.state.params || {});
+      } else {
+        const parsed = parseHash(window.location.hash);
+        setCurrentPage(parsed.page);
+        setPageParams(parsed.params);
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.addEventListener('hashchange', handleUrlChange);
-    window.addEventListener('popstate', handleUrlChange);
-
-    return () => {
-      window.removeEventListener('hashchange', handleUrlChange);
-      window.removeEventListener('popstate', handleUrlChange);
-    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const handleNavigate = (page, params = {}) => {
+  const handleNavigate = (page, params = {}, replace = false) => {
+    // Handle programmatic "back"
+    if (page === 'back') {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        handleNavigate('home', {}, true);
+      }
+      return;
+    }
+
+    const targetHash = buildHash(page, params);
+    const nextState = { page, params, timestamp: Date.now() };
+
+    if (replace) {
+      window.history.replaceState(nextState, '', targetHash);
+    } else {
+      window.history.pushState(nextState, '', targetHash);
+    }
+
     setCurrentPage(page);
     setPageParams(params);
-    if (page === 'admin') {
-      window.location.hash = '#admin';
-    } else if (window.location.hash === '#admin' || window.location.hash === '#/admin') {
-      // Remove hash cleanly without page reload
-      window.history.pushState(null, '', window.location.pathname || '/');
-    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

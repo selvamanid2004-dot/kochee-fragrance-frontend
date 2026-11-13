@@ -101,6 +101,7 @@ export default function Footer({ onNavigate }) {
             <li><button onClick={() => onNavigate('cms', { slug: 'shipping-policy' })} className="hover:text-white transition">Shipping Policy</button></li>
             <li><button onClick={() => onNavigate('cms', { slug: 'refund-policy' })} className="hover:text-white transition">Returns & Tester Policy</button></li>
             <li><button onClick={() => onNavigate('cms', { slug: 'fragrance-guide' })} className="hover:text-white transition">Perfume Application Guide</button></li>
+            <li><button onClick={() => onNavigate('admin')} className="text-neutral-500 hover:text-neutral-300 transition text-[11px]">Staff / Admin Console</button></li>
           </ul>
         </div>
       </div>
@@ -112,6 +113,7 @@ export default function Footer({ onNavigate }) {
           <button onClick={() => onNavigate('catalog')} className="hover:text-white transition">All Perfumes</button>
           <button onClick={() => onNavigate('about')} className="hover:text-white transition">About</button>
           <button onClick={() => onNavigate('contact')} className="hover:text-white transition">Contact</button>
+          <button onClick={() => onNavigate('admin')} className="text-neutral-500 hover:text-white transition">Admin Portal</button>
           <span className="text-white font-semibold">• 100% Secure Checkout</span>
           <span className="text-white font-semibold">• COD Available</span>
         </div>

@@ -21,18 +21,46 @@ import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
-  // Listen to hash for direct /#admin route
+  // Listen to pathname & hash for direct /admin or /#admin route
   const getInitialPage = () => {
-    if (window.location.hash === '#admin') return 'admin';
+    const hash = window.location.hash.toLowerCase();
+    const path = window.location.pathname.toLowerCase();
+    if (hash === '#admin' || hash === '#/admin' || path === '/admin' || path.startsWith('/admin')) {
+      return 'admin';
+    }
     return 'home';
   };
 
   const [currentPage, setCurrentPage] = useState(getInitialPage());
   const [pageParams, setPageParams] = useState({});
 
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const hash = window.location.hash.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
+      if (hash === '#admin' || hash === '#/admin' || path === '/admin' || path.startsWith('/admin')) {
+        setCurrentPage('admin');
+      }
+    };
+
+    window.addEventListener('hashchange', handleUrlChange);
+    window.addEventListener('popstate', handleUrlChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleUrlChange);
+      window.removeEventListener('popstate', handleUrlChange);
+    };
+  }, []);
+
   const handleNavigate = (page, params = {}) => {
     setCurrentPage(page);
     setPageParams(params);
+    if (page === 'admin') {
+      window.location.hash = '#admin';
+    } else if (window.location.hash === '#admin' || window.location.hash === '#/admin') {
+      // Remove hash cleanly without page reload
+      window.history.pushState(null, '', window.location.pathname || '/');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

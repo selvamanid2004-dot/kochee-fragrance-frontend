@@ -1,13 +1,18 @@
 import React from 'react';
 import { Star, ShoppingBag, Sparkles } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { sanitizeMediaUrl } from '../../api/endpoints';
 
 export default function ProductCard({ product, onNavigate }) {
   const { addToCart } = useCart();
 
-  const primaryImage = Array.isArray(product.images) && product.images.length > 0
+  const fallbackProductImage = 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=600';
+
+  const rawImage = Array.isArray(product.images) && product.images.length > 0
     ? product.images[0]
-    : 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=600';
+    : fallbackProductImage;
+
+  const primaryImage = sanitizeMediaUrl(rawImage) || fallbackProductImage;
 
   const discountPercent = product.compare_price && product.compare_price > product.price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
@@ -23,6 +28,10 @@ export default function ProductCard({ product, onNavigate }) {
         <img
           src={primaryImage}
           alt={product.title}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = fallbackProductImage;
+          }}
           className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
           loading="lazy"
         />

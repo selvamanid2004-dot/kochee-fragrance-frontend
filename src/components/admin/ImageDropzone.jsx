@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, X, Trash2, CheckCircle2, RefreshCw, Image as ImageIcon, AlertCircle } from 'lucide-react';
 import { uploadService } from '../../services/uploadService';
+import { sanitizeMediaUrl } from '../../api/endpoints';
 
 export default function ImageDropzone({
   value,
@@ -137,7 +138,7 @@ export default function ImageDropzone({
         {value ? (
           <div className={`relative w-full ${aspectRatio} bg-black flex items-center justify-center overflow-hidden`}>
             <img
-              src={value}
+              src={sanitizeMediaUrl(value)}
               alt="Uploaded Preview"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               onError={(e) => {

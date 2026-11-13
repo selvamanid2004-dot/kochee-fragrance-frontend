@@ -4,6 +4,20 @@ export const API_BASE_URL =
     ? 'https://kochee-fragrance-backend.onrender.com/api'
     : 'http://localhost:5000/api');
 
+export const BACKEND_STATIC_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
+export function sanitizeMediaUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  let cleaned = url.trim();
+  if (cleaned.startsWith('http://localhost:5000') || cleaned.startsWith('http://127.0.0.1:5000')) {
+    cleaned = cleaned.replace(/^https?:\/\/(localhost|127\.0\.0\.1):5000/, BACKEND_STATIC_URL);
+  } else if (cleaned.startsWith('/uploads') || cleaned.startsWith('uploads/')) {
+    const slash = cleaned.startsWith('/') ? '' : '/';
+    cleaned = `${BACKEND_STATIC_URL}${slash}${cleaned}`;
+  }
+  return cleaned;
+}
+
 export const ENDPOINTS = {
   // Auth
   LOGIN: '/auth/login',

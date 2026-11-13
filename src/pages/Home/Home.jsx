@@ -6,6 +6,7 @@ import { productService } from '../../services/productService';
 import { categoryService } from '../../services/categoryService';
 import { offerService } from '../../services/offerService';
 import { settingService } from '../../services/settingService';
+import { sanitizeMediaUrl } from '../../api/endpoints';
 
 // Default 6 Curated High-Definition Luxury Perfume Visuals
 const DEFAULT_BANNER_IMAGES = [
@@ -84,7 +85,12 @@ export default function Home({ onNavigate }) {
 
         if (settingsRes.status === 'fulfilled' && settingsRes.value) {
           const s = settingsRes.value;
-          setSettings(prev => ({ ...prev, ...s }));
+          setSettings(prev => ({
+            ...prev,
+            ...s,
+            promo_banner_him_image: sanitizeMediaUrl(s.promo_banner_him_image || prev.promo_banner_him_image),
+            promo_banner_her_image: sanitizeMediaUrl(s.promo_banner_her_image || prev.promo_banner_her_image)
+          }));
 
           // 1. Check if Admin configured custom hero banners in Admin CMS
           if (s.hero_banners) {
@@ -95,14 +101,18 @@ export default function Home({ onNavigate }) {
             if (Array.isArray(parsed) && parsed.length > 0) {
               const validSlides = parsed
                 .filter(b => b && (b.image || typeof b === 'string'))
-                .map((b, i) => ({
-                  id: b.id || `admin-slide-${i + 1}`,
-                  image: typeof b === 'string' ? b : b.image,
-                  mobile_image: typeof b === 'object' ? (b.mobile_image || '') : '',
-                  fit_mode: (typeof b === 'object' && b.fit_mode) ? b.fit_mode : 'responsive',
-                  link: (typeof b === 'object' && b.link) ? b.link : '',
-                  alt: (typeof b === 'object' && b.alt) ? b.alt : `Kochee Luxury Perfume Banner ${i + 1}`
-                }));
+                .map((b, i) => {
+                  const img = typeof b === 'string' ? b : b.image;
+                  const mobImg = typeof b === 'object' ? (b.mobile_image || '') : '';
+                  return {
+                    id: b.id || `admin-slide-${i + 1}`,
+                    image: sanitizeMediaUrl(img),
+                    mobile_image: mobImg ? sanitizeMediaUrl(mobImg) : '',
+                    fit_mode: (typeof b === 'object' && b.fit_mode) ? b.fit_mode : 'responsive',
+                    link: (typeof b === 'object' && b.link) ? b.link : '',
+                    alt: (typeof b === 'object' && b.alt) ? b.alt : `Kochee Luxury Perfume Banner ${i + 1}`
+                  };
+                });
 
               if (validSlides.length > 0) {
                 activeBanners = validSlides;
@@ -120,8 +130,8 @@ export default function Home({ onNavigate }) {
             .filter(o => o.banner_image && o.is_active)
             .map((offer, idx) => ({
               id: `offer-img-${offer.id || idx}`,
-              image: offer.banner_image,
-              mobile_image: offer.banner_image,
+              image: sanitizeMediaUrl(offer.banner_image),
+              mobile_image: sanitizeMediaUrl(offer.banner_image),
               alt: offer.title || 'Special Promotion'
             }));
 

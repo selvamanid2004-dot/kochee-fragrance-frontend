@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { sanitizeMediaUrl } from '../../api/endpoints';
+
+const LUXURY_FALLBACK_BANNER = 'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&q=85&w=2000';
 
 export default function ResponsiveBannerSlider({
   banners = [],
@@ -111,7 +114,9 @@ export default function ResponsiveBannerSlider({
         {banners.map((banner, idx) => {
           const isActive = idx === currentSlide;
           const isClickable = !!banner.link;
-          const hasMobileImg = !!banner.mobile_image;
+          const bannerDesktopImg = sanitizeMediaUrl(banner.image || '');
+          const bannerMobileImg = banner.mobile_image ? sanitizeMediaUrl(banner.mobile_image) : '';
+          const hasMobileImg = !!bannerMobileImg;
 
           return (
             <div
@@ -126,16 +131,20 @@ export default function ResponsiveBannerSlider({
                 {hasMobileImg && (
                   <source
                     media="(max-width: 767px)"
-                    srcSet={banner.mobile_image}
+                    srcSet={bannerMobileImg}
                   />
                 )}
                 <source
                   media="(min-width: 768px)"
-                  srcSet={banner.image}
+                  srcSet={bannerDesktopImg}
                 />
                 <img
-                  src={banner.image}
+                  src={bannerDesktopImg || LUXURY_FALLBACK_BANNER}
                   alt={banner.alt || `Kochee Perfume Banner Slide ${idx + 1}`}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = LUXURY_FALLBACK_BANNER;
+                  }}
                   className={`w-full h-full transform transition-transform duration-[6000ms] ease-out ${
                     hasMobileImg
                       ? 'object-cover object-center'

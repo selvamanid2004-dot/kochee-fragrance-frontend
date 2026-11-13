@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { settingService } from '../../services/settingService';
 import { cmsService } from '../../services/cmsService';
+import { sanitizeMediaUrl } from '../../api/endpoints';
 import ImageDropzone from './ImageDropzone';
 
 // Default 6 Curated High-Definition Luxury Perfume Banner Slides
@@ -135,7 +136,12 @@ export default function AdminCmsView({
               try { parsed = JSON.parse(parsed); } catch (e) {}
             }
             if (Array.isArray(parsed) && parsed.length > 0) {
-              setHeroBanners(parsed);
+              const sanitizedBanners = parsed.map(b => ({
+                ...b,
+                image: sanitizeMediaUrl(b.image || ''),
+                mobile_image: b.mobile_image ? sanitizeMediaUrl(b.mobile_image) : ''
+              }));
+              setHeroBanners(sanitizedBanners);
             }
           }
         }

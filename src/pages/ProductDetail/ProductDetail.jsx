@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Star, ShieldCheck, Truck, RotateCcw, Award, Check, ArrowLeft, Clock, Wind, Sparkles } from 'lucide-react';
 import { productService } from '../../services/productService';
 import { useCart } from '../../context/CartContext';
+import { sanitizeMediaUrl } from '../../api/endpoints';
 
 export default function ProductDetail({ slug, onNavigate }) {
   const [product, setProduct] = useState(null);
@@ -63,9 +64,11 @@ export default function ProductDetail({ slug, onNavigate }) {
     );
   }
 
-  const images = Array.isArray(product.images) && product.images.length > 0
+  const rawImages = Array.isArray(product.images) && product.images.length > 0
     ? product.images
     : ['https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=800'];
+
+  const images = rawImages.map(img => sanitizeMediaUrl(img) || 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=800');
 
   const discountPercent = product.compare_price && product.compare_price > product.price
     ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)

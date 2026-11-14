@@ -1,12 +1,13 @@
 import { apiClient } from '../api/apiClient';
 import { ENDPOINTS } from '../api/endpoints';
+import { safeStorage } from '../utils/safeStorage';
 
 export const authService = {
   async register(name, email, password) {
     const res = await apiClient.post(ENDPOINTS.REGISTER, { name, email, password });
     if (res.data && res.data.token) {
-      localStorage.setItem('kochee_auth_token', res.data.token);
-      localStorage.setItem('kochee_auth_user', JSON.stringify(res.data.user));
+      safeStorage.setItem('kochee_auth_token', res.data.token);
+      safeStorage.setJSON('kochee_auth_user', res.data.user);
     }
     return res.data;
   },
@@ -14,10 +15,10 @@ export const authService = {
   async login(email, password) {
     const res = await apiClient.post(ENDPOINTS.LOGIN, { email, password });
     if (res.data && res.data.token) {
-      localStorage.setItem('kochee_auth_token', res.data.token);
-      localStorage.setItem('kochee_auth_user', JSON.stringify(res.data.user));
+      safeStorage.setItem('kochee_auth_token', res.data.token);
+      safeStorage.setJSON('kochee_auth_user', res.data.user);
       if (res.data.user?.role === 'admin') {
-        localStorage.setItem('kochee_admin_token', res.data.token);
+        safeStorage.setItem('kochee_admin_token', res.data.token);
       }
     }
     return res.data;
@@ -29,18 +30,18 @@ export const authService = {
   },
 
   logout() {
-    localStorage.removeItem('kochee_auth_token');
-    localStorage.removeItem('kochee_auth_user');
-    localStorage.removeItem('kochee_admin_token');
+    safeStorage.removeItem('kochee_auth_token');
+    safeStorage.removeItem('kochee_auth_user');
+    safeStorage.removeItem('kochee_admin_token');
   },
 
   getCurrentUser() {
-    const user = localStorage.getItem('kochee_auth_user');
-    return user ? JSON.parse(user) : null;
+    return safeStorage.getJSON('kochee_auth_user', null);
   },
 
   isAuthenticated() {
-    return !!localStorage.getItem('kochee_auth_token');
+    return !!safeStorage.getItem('kochee_auth_token');
   }
 };
+
 

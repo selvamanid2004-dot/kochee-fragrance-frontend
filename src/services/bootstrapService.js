@@ -1,5 +1,6 @@
 import { apiClient } from '../api/apiClient';
 import { ENDPOINTS, sanitizeMediaUrl } from '../api/endpoints';
+import { safeStorage } from '../utils/safeStorage';
 
 const BOOTSTRAP_CACHE_KEY = 'kochee_home_bootstrap_v2';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -53,19 +54,16 @@ export function extractBannerImages(settings, offers = []) {
 
 export const bootstrapService = {
   /**
-   * Synchronously retrieve cached bootstrap data from localStorage for instant, zero-flicker 0ms render.
+   * Synchronously retrieve cached bootstrap data from safeStorage for instant, zero-flicker 0ms render.
    */
   getCachedHomeData() {
-    if (typeof window === 'undefined') return null;
     try {
-      const raw = localStorage.getItem(BOOTSTRAP_CACHE_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw);
+      const parsed = safeStorage.getJSON(BOOTSTRAP_CACHE_KEY, null);
       if (!parsed || !parsed.data) return null;
 
       // Check cache age
       if (Date.now() - parsed.timestamp > CACHE_MAX_AGE_MS) {
-        localStorage.removeItem(BOOTSTRAP_CACHE_KEY);
+        safeStorage.removeItem(BOOTSTRAP_CACHE_KEY);
         return null;
       }
 
@@ -79,7 +77,7 @@ export const bootstrapService = {
         offers: offers || [],
         bannerImages
       };
-    } catch (e) {
+    } catch {
       return null;
     }
   },
@@ -99,18 +97,14 @@ export const bootstrapService = {
           try {
             const preloader = new Image();
             preloader.src = bannerImages[0].image;
-          } catch (e) {}
+          } catch {}
         }
 
-        // Cache latest validated data
-        if (typeof window !== 'undefined') {
-          try {
-            localStorage.setItem(
-              BOOTSTRAP_CACHE_KEY,
-              JSON.stringify({ timestamp: Date.now(), data })
-            );
-          } catch (e) {}
-        }
+        // Cache latest validated data safely
+        safeStorage.setJSON(
+          BOOTSTRAP_CACHE_KEY,
+          { timestamp: Date.now(), data }
+        );
 
         return {
           settings: data.settings || null,
@@ -131,10 +125,7 @@ export const bootstrapService = {
    * Invalidate local cache when admin modifies products, banners, or settings
    */
   clearCache() {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.removeItem(BOOTSTRAP_CACHE_KEY);
-      } catch (e) {}
-    }
+    safeStorage.removeItem(BOOTSTRAP_CACHE_KEY);
   }
 };
+

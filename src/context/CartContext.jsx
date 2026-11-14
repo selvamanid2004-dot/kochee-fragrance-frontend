@@ -1,25 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { safeStorage } from '../utils/safeStorage';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
-    try {
-      const saved = localStorage.getItem('kochee_cart');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
+    return safeStorage.getJSON('kochee_cart', []);
   });
 
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
 
   useEffect(() => {
-    try {
-      localStorage.setItem('kochee_cart', JSON.stringify(cart));
-    } catch (e) {
-      console.error('Failed to sync cart storage', e);
-    }
+    safeStorage.setJSON('kochee_cart', cart);
   }, [cart]);
 
   const addToCart = (product, quantity = 1) => {

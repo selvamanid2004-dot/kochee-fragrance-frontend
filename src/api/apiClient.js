@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './endpoints';
+import { safeStorage } from '../utils/safeStorage';
 
 class ApiClient {
   constructor(baseURL) {
@@ -10,7 +11,7 @@ class ApiClient {
     const headers = {
       'Content-Type': 'application/json'
     };
-    const token = localStorage.getItem('kochee_admin_token') || localStorage.getItem('kochee_auth_token');
+    const token = safeStorage.getItem('kochee_admin_token') || safeStorage.getItem('kochee_auth_token');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -99,7 +100,7 @@ class ApiClient {
 
   async upload(endpoint, formData, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    const token = localStorage.getItem('kochee_admin_token') || localStorage.getItem('kochee_auth_token');
+    const token = safeStorage.getItem('kochee_admin_token') || safeStorage.getItem('kochee_auth_token');
     const headers = { ...options.headers };
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;

@@ -110,6 +110,26 @@ function buildHash(page, params = {}) {
   }
 }
 
+function safeReplaceState(state, title, url) {
+  try {
+    if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+      window.history.replaceState(state, title, url);
+    }
+  } catch (err) {
+    // Gracefully handle restricted storage/history environments or iOS Safari private mode
+  }
+}
+
+function safePushState(state, title, url) {
+  try {
+    if (typeof window !== 'undefined' && window.history && window.history.pushState) {
+      window.history.pushState(state, title, url);
+    }
+  } catch (err) {
+    // Gracefully handle restricted environments
+  }
+}
+
 export default function App() {
   const initialRoute = parseHash();
   const [currentPage, setCurrentPage] = useState(initialRoute.page);
@@ -122,8 +142,8 @@ export default function App() {
     // anchor Home at the base of browser history so pressing Mobile Back
     // gracefully returns to Home instead of exiting the website!
     if (initial.page !== 'home') {
-      window.history.replaceState({ page: 'home', params: {}, rootAnchor: true }, '', '#/');
-      window.history.pushState(
+      safeReplaceState({ page: 'home', params: {}, rootAnchor: true }, '', '#/');
+      safePushState(
         { page: initial.page, params: initial.params },
         '',
         buildHash(initial.page, initial.params)
@@ -131,7 +151,7 @@ export default function App() {
       setCurrentPage(initial.page);
       setPageParams(initial.params);
     } else {
-      window.history.replaceState({ page: 'home', params: {}, rootAnchor: true }, '', '#/');
+      safeReplaceState({ page: 'home', params: {}, rootAnchor: true }, '', '#/');
     }
 
     const handlePopState = (event) => {
@@ -153,9 +173,13 @@ export default function App() {
   const handleNavigate = (page, params = {}, replace = false) => {
     // Handle programmatic "back"
     if (page === 'back') {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
+      try {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          handleNavigate('home', {}, true);
+        }
+      } catch {
         handleNavigate('home', {}, true);
       }
       return;
@@ -165,9 +189,9 @@ export default function App() {
     const nextState = { page, params, timestamp: Date.now() };
 
     if (replace) {
-      window.history.replaceState(nextState, '', targetHash);
+      safeReplaceState(nextState, '', targetHash);
     } else {
-      window.history.pushState(nextState, '', targetHash);
+      safePushState(nextState, '', targetHash);
     }
 
     setCurrentPage(page);

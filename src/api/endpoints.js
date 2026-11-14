@@ -66,6 +66,7 @@ export const ENDPOINTS = {
 
   // Global Settings & Branding
   SETTINGS: '/settings',
+  BOOTSTRAP: '/settings/bootstrap',
 
   // Contact
   CONTACT: '/contact',

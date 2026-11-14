@@ -3,6 +3,7 @@ import { ShoppingBag, Search, Menu, X, User, ArrowLeft, Home as HomeIcon, LogIn,
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { settingService } from '../../services/settingService';
+import { bootstrapService } from '../../services/bootstrapService';
 
 export default function Navbar({ onNavigate, currentPage }) {
   const { totalItemCount, setIsCartDrawerOpen } = useCart();
@@ -11,12 +12,14 @@ export default function Navbar({ onNavigate, currentPage }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
+  const cachedSettings = bootstrapService.getCachedHomeData()?.settings;
+
   // Dynamic Site Settings from CMS
   const [settings, setSettings] = useState({
-    logo_text: 'KOCHEE',
-    logo_subtitle: 'HAUTE PARFUMERIE',
-    logo_image: '',
-    announcement_text: '✨ 100% ORIGINAL LUXURY PERFUMES • AUTHENTICITY GUARANTEED | 🚚 FREE PAN-INDIA SHIPPING ON ORDERS ABOVE ₹999 | 💵 CASH ON DELIVERY AVAILABLE'
+    logo_text: cachedSettings?.logo_text || 'KOCHEE',
+    logo_subtitle: cachedSettings?.logo_subtitle || 'HAUTE PARFUMERIE',
+    logo_image: cachedSettings?.logo_image || '',
+    announcement_text: cachedSettings?.announcement_text || '✨ 100% ORIGINAL LUXURY PERFUMES • AUTHENTICITY GUARANTEED | 🚚 FREE PAN-INDIA SHIPPING ON ORDERS ABOVE ₹999 | 💵 CASH ON DELIVERY AVAILABLE'
   });
 
   useEffect(() => {

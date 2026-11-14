@@ -1,5 +1,6 @@
 import { apiClient } from '../api/apiClient';
 import { ENDPOINTS } from '../api/endpoints';
+import { bootstrapService } from './bootstrapService';
 
 export const categoryService = {
   async getCategories() {
@@ -14,16 +15,19 @@ export const categoryService = {
 
   async createCategory(data) {
     const res = await apiClient.post(ENDPOINTS.CATEGORIES, data);
+    bootstrapService.clearCache();
     return res.data;
   },
 
   async updateCategory(id, data) {
     const res = await apiClient.put(ENDPOINTS.CATEGORY_BY_ID(id), data);
+    bootstrapService.clearCache();
     return res.data;
   },
 
   async deleteCategory(id) {
     const res = await apiClient.delete(ENDPOINTS.CATEGORY_BY_ID(id));
+    bootstrapService.clearCache();
     return res.data;
   }
 };

@@ -7,15 +7,35 @@ const LUXURY_FALLBACK_BANNER = 'https://images.unsplash.com/photo-1615397349754-
 export default function ResponsiveBannerSlider({
   banners = [],
   onNavigate,
-  autoPlayInterval = 4500
+  autoPlayInterval = 4500,
+  loading = false
 }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
 
-  // If no banners provided, return null
-  if (!banners || banners.length === 0) return null;
+  // When loading or no banners are available yet, render luxury aspect-ratio-matched skeleton
+  if (loading || !banners || banners.length === 0) {
+    return (
+      <section
+        className="relative w-full overflow-hidden bg-black select-none shadow-xl"
+        aria-label="Loading Banners"
+      >
+        <div className="relative w-full aspect-[4/5] sm:aspect-[16/7] md:aspect-[2.4/1] lg:aspect-[2.74/1] bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950 animate-pulse flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3 text-center px-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-amber-500/20 bg-neutral-900/80 flex items-center justify-center shadow-lg">
+              <span className="font-serif text-xl sm:text-3xl text-amber-400 font-bold tracking-widest">K</span>
+            </div>
+            <div className="h-3 sm:h-3.5 w-32 sm:w-48 bg-neutral-800 rounded-full" />
+            <div className="h-2 w-20 sm:w-28 bg-neutral-800/60 rounded-full" />
+          </div>
+          {/* Subtle luxury ambient shimmer overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
+        </div>
+      </section>
+    );
+  }
 
   // Auto-play timer
   useEffect(() => {

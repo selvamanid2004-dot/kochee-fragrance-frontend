@@ -1,5 +1,6 @@
 import { apiClient } from '../api/apiClient';
 import { ENDPOINTS } from '../api/endpoints';
+import { bootstrapService } from './bootstrapService';
 
 export const productService = {
   async getProducts(params = {}) {
@@ -27,21 +28,25 @@ export const productService = {
 
   async createProduct(data) {
     const res = await apiClient.post(ENDPOINTS.PRODUCTS, data);
+    bootstrapService.clearCache();
     return res.data;
   },
 
   async updateProduct(id, data) {
     const res = await apiClient.put(ENDPOINTS.PRODUCT_BY_ID(id), data);
+    bootstrapService.clearCache();
     return res.data;
   },
 
   async updateStock(id, stock, reason = 'Admin manual adjustment') {
     const res = await apiClient.patch(ENDPOINTS.UPDATE_STOCK(id), { stock, reason });
+    bootstrapService.clearCache();
     return res.data;
   },
 
   async bulkUpload(products) {
     const res = await apiClient.post(ENDPOINTS.BULK_UPLOAD, { products });
+    bootstrapService.clearCache();
     return res.data;
   },
 
@@ -52,6 +57,7 @@ export const productService = {
 
   async deleteProduct(id) {
     const res = await apiClient.delete(ENDPOINTS.PRODUCT_BY_ID(id));
+    bootstrapService.clearCache();
     return res.data;
   }
 };

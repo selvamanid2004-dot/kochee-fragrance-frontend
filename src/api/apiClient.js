@@ -3,6 +3,7 @@ import { API_BASE_URL } from './endpoints';
 class ApiClient {
   constructor(baseURL) {
     this.baseURL = baseURL;
+    this.inFlightRequests = new Map();
   }
 
   getHeaders() {
@@ -17,7 +18,16 @@ class ApiClient {
   }
 
   async request(endpoint, options = {}) {
+    const method = (options.method || 'GET').toUpperCase();
     const url = `${this.baseURL}${endpoint}`;
+
+    // In-flight deduplication for concurrent identical GET requests
+    if (method === 'GET' && !options.skipDedupe) {
+      if (this.inFlightRequests.has(url)) {
+        return this.inFlightRequests.get(url);
+      }
+    }
+
     const headers = {
       ...this.getHeaders(),
       ...options.headers
@@ -28,19 +38,31 @@ class ApiClient {
       headers
     };
 
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
+    const fetchPromise = (async () => {
+      try {
+        const response = await fetch(url, config);
+        const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || `Request failed with status ${response.status}`);
+        if (!response.ok) {
+          throw new Error(data.message || `Request failed with status ${response.status}`);
+        }
+
+        return data;
+      } catch (error) {
+        console.error(`[API Error] ${method} ${url}:`, error.message);
+        throw error;
+      } finally {
+        if (method === 'GET') {
+          this.inFlightRequests.delete(url);
+        }
       }
+    })();
 
-      return data;
-    } catch (error) {
-      console.error(`[API Error] ${options.method || 'GET'} ${url}:`, error.message);
-      throw error;
+    if (method === 'GET' && !options.skipDedupe) {
+      this.inFlightRequests.set(url, fetchPromise);
     }
+
+    return fetchPromise;
   }
 
   get(endpoint, options = {}) {
